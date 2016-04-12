@@ -13,7 +13,7 @@
 // INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT // OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // 
 // 
-// The WebAPI class interfaces with the shodanhq.com/api
+// The Shodan class interfaces with the https://api.shodan.io/
 // Author: Alexandre Antonio Juca <alexandre.juca@bitfyr.com>
 //===----------------------------------------------------------===//
 import Glibc
@@ -51,7 +51,9 @@ struct Shodan {
   
   // performs a shodan search without results
   // Returns the total number of results that matched the query and any facet information.
-  
+  func count(query: String) -> () {
+      return request("shodan/host/count", query: query)
+  }
   
 }
 
