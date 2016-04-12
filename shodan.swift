@@ -30,10 +30,12 @@ struct Shodan {
   // Internal method that handles HTTP requests to the api
   // Requires a webservice function as param eg.("search") or ("count") and a structure containing arguments
   func request(function: String, query: String?=nil) {
-      let url: String = "\(self.baseUrl)/\(function)?key=\(self.apiKey)&query=\(query)&facets=apache";
+      let hasQuery = query == nil
+      let url: String = hasQuery ? "\(self.baseUrl)/\(function)?key=\(self.apiKey)&query=\(query)&facets=apache" : "\(self.baseUrl)/\(function)?key=\(self.apiKey)&query=\(query!)&facets=apache" ;
       print("[DEBUG] url: \(url)")
       // Unfortunately do not have access to swifts Foundation library so NSURL cannot be used
-      // to perform HTTP Requests
+      // to perform HTTP Requests, 
+      // our workaround is to use Glibc's system call to execute curl with a given endpoint url
       //system("curl -S \(url)")
   } 
   
@@ -59,3 +61,4 @@ struct Shodan {
 
 let shodan = Shodan(apiKey: "YOUR-API-KEY")
 shodan.host("196.45.160.9")
+shodan.count("apache")
