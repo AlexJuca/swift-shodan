@@ -1,10 +1,10 @@
 Swift Shodan
 =================
 ## What is it? 
-*Swift shodan is a swift interface to the shodan api
+* Swift shodan is a swift interface to the shodan api
 
  
-## Developeed by 
+## Developed by 
 * Alexandre A.Juca <alexandre.juca@bitfyr.com>
 
 ## License
