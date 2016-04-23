@@ -16,27 +16,43 @@
 // The Shodan class interfaces with the https://api.shodan.io/
 // Author: Alexandre Antonio Juca <alexandre.juca@bitfyr.com>
 //===----------------------------------------------------------===//
+
 import Glibc
 
 struct Shodan {
   let baseUrl = "https://api.shodan.io/"
   var apiKey = "" // Could be set to nil instead
+  var apiIsSet = false
   
   init (apiKey: String) {
-    self.apiKey = apiKey
-    print("[DEBUG] apiKey is set to -> \(self.apiKey). ")
+      if apiKey == " " || apiKey.isEmpty {
+          return 
+      } else {
+          self.apiIsSet = true
+          self.apiKey = apiKey
+          print("[DEBUG] apiKey is set to -> \(self.apiKey). ")
+      }
+    
   }
-
+  
   // Internal method that handles HTTP requests to the api
   // Requires a webservice function as param eg.("search") or ("count") and a structure containing arguments
   func request(function: String, query: String?=nil) {
-      let hasQuery = query == nil
-      let url: String = hasQuery ? "\(self.baseUrl)/\(function)?key=\(self.apiKey)&query=\(query)&facets=apache" : "\(self.baseUrl)/\(function)?key=\(self.apiKey)&query=\(query!)&facets=apache" ;
-      print("[DEBUG] url: \(url)")
-      // Unfortunately do not have access to swifts Foundation library so NSURL cannot be used
-      // to perform HTTP Requests, 
-      // our workaround is to use Glibc's system call to execute curl with a given endpoint url
-      //system("curl -S \(url)")
+      if apiIsSet {
+          let hasQuery = query == nil
+          let url: String = hasQuery ? "\(self.baseUrl)/\(function)?key=\(self.apiKey)&query=\(query)" 
+                                        : "\(self.baseUrl)/\(function)?key=\(self.apiKey)&query=\(query!)" ;
+          print("[DEBUG] url: \(url)")
+          // Unfortunately Linux does not have access to swifts Foundation library so NSURL cannot be used
+          // to perform HTTP Requests, 
+          // our workaround is to use Glibc's system call to execute curl with a given endpoint url
+          system("curl -s \(url) > results")
+      } else {
+          print("Please add a valid shodan API key")
+          return;
+      }
+       
+       
   } 
   
   // Returns all services that have been on the given host IP
@@ -59,6 +75,7 @@ struct Shodan {
   
 }
 
-let shodan = Shodan(apiKey: "YOUR-API-KEY")
-shodan.host("196.45.160.9")
-shodan.count("apache")
+let shodanTest = Shodan(apiKey: " ")
+
+
+shodanTest.search("nginx")
